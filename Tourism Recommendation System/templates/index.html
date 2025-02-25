@@ -313,216 +313,168 @@
 		</div><!--/.section-header-->
 		<div class="reviews-content">
 			<div class="testimonial-carousel">
+				<!-- Loop over the reviews -->
+				{% for review in reviews %}
 				<div class="single-testimonial-box">
 					<div class="testimonial-description">
 						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c1.png" alt="clients">
-							</div><!--/.testimonial-img-->
 							<div class="testimonial-person">
-								<h2>Tom Leakar</h2>
-								<h4>london, UK</h4>
+								<h2>{{ review['username'] or 'Anonymous' }}</h2> <!-- Corrected to use 'username' -->
 								<div class="testimonial-person-star">
+									<!-- Display star ratings based on the review rating -->
+									{% for i in range(0, review['rating']|int) %}
 									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
+									{% endfor %}
+									{% for i in range(review['rating']|int, 5) %}
+									<i class="fa fa-star-o"></i> <!-- Empty stars -->
+									{% endfor %}
 								</div>
 							</div><!--/.testimonial-person-->
 						</div><!--/.testimonial-info-->
 						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
+							<p>{{ review['review_text'] }}</p>
 						</div><!--/.testimonial-comment-->
 					</div><!--/.testimonial-description-->
 				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c2.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>monirul islam</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c3.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>Shohrab Hossain</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c4.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>Tom Leakar</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c1.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>Tom Leakar</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c2.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>monirul islam</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c3.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>Shohrab Hossain</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
-				<div class="single-testimonial-box">
-					<div class="testimonial-description">
-						<div class="testimonial-info">
-							<div class="testimonial-img">
-								<img src="assets/images/clients/c4.png" alt="clients">
-							</div><!--/.testimonial-img-->
-							<div class="testimonial-person">
-								<h2>Tom Leakar</h2>
-								<h4>london, UK</h4>
-								<div class="testimonial-person-star">
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-									<i class="fa fa-star"></i>
-								</div>
-							</div><!--/.testimonial-person-->
-						</div><!--/.testimonial-info-->
-						<div class="testimonial-comment">
-							<p>
-								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-								mollit anim id est laborum. Sed ut perspiciatis eaque.
-							</p>
-						</div><!--/.testimonial-comment-->
-					</div><!--/.testimonial-description-->
-				</div><!--/.single-testimonial-box-->
+				{% endfor %}
+			</div>			
+
+			<!-- Button to open the modal -->
+			<button class="submit-review-button" type="button" id="openModalBtn">Submit a review</button>
+
+			<!-- Modal for submitting a review -->
+			<div id="reviewModal" class="modal">
+				<div class="modal-content">
+					<span class="close">&times;</span>
+					<h2>Rate your experience</h2>
+
+					<form id="reviewForm" action="/submit_review" method="POST">
+						<!-- Rating (Stars) -->
+						<div class="rating-container" id="starRating">
+							<label data-value="1">&#9733;</label>
+							<label data-value="2">&#9733;</label>
+							<label data-value="3">&#9733;</label>
+							<label data-value="4">&#9733;</label>
+							<label data-value="5">&#9733;</label>
+						</div>
+
+						<!-- Hidden input to store the rating value -->
+						<input type="hidden" id="ratingInput" name="rating">
+
+						<!-- Textbox -->
+						<div class="textarea-container">
+							<textarea name="review_text" maxlength="256"
+								placeholder="Enter your review (Max 256 characters)"></textarea>
+						</div>
+
+						<!-- Submit Button -->
+						<button class="submit-modal" type="submit">Submit Review</button>
+					</form>
+				</div>
+
+				<script>
+					// Get the modal
+					var modal = document.getElementById("reviewModal");
+
+					// Get the button that opens the modal
+					var btn = document.getElementById("openModalBtn");
+
+					// Get the <span> element that closes the modal
+					var span = document.getElementsByClassName("close")[0];
+
+					// When the user clicks the button, open the modal
+					btn.onclick = function () {
+						modal.style.display = "block"; // Display modal when button is clicked
+					}
+
+					// When the user clicks on <span> (x), close the modal
+					span.onclick = function () {
+						modal.style.display = "none"; // Hide modal when close (x) is clicked
+					}
+
+					// When the user clicks anywhere outside of the modal, close it
+					window.onclick = function (event) {
+						if (event.target == modal) {
+							modal.style.display = "none"; // Close modal when clicking outside
+						}
+					}
+
+					// Star rating logic
+					var stars = document.querySelectorAll("#starRating label");
+					var ratingInput = document.getElementById("ratingInput");
+
+					stars.forEach(star => {
+						// Hover effect to make stars yellow
+						star.addEventListener('mouseover', function () {
+							resetStars();
+							highlightStars(this.getAttribute('data-value'));
+						});
+
+						// Remove hover effect when mouse leaves
+						star.addEventListener('mouseout', function () {
+							resetStars();
+							if (ratingInput.value > 0) {
+								highlightStars(ratingInput.value);
+							}
+						});
+
+						// Set rating on click and keep stars highlighted
+						star.addEventListener('click', function () {
+							ratingInput.value = this.getAttribute('data-value'); // Set rating value
+							resetStars();
+							highlightStars(ratingInput.value);
+						});
+					});
+
+					// Function to highlight stars based on rating
+					function highlightStars(ratingValue) {
+						for (var i = 0; i < ratingValue; i++) {
+							stars[i].classList.add('selected');
+						}
+					}
+
+					// Function to reset all stars to default
+					function resetStars() {
+						stars.forEach(star => {
+							star.classList.remove('selected');
+						});
+					}
+
+					// Initialize Slick carousel with custom settings
+					$(document).ready(function () {
+						$('.testimonial-carousel').slick({
+							infinite: true,
+							slidesToShow: 3,
+							slidesToScroll: 1,
+							autoplay: true,
+							autoplaySpeed: 2000,
+							centerMode: true, // Center the items
+							centerPadding: '0', // Remove padding
+							arrows: true,
+							dots: false, // Disable dots
+							responsive: [
+								{
+									breakpoint: 768,
+									settings: {
+										slidesToShow: 2,
+										slidesToScroll: 1
+									}
+								},
+								{
+									breakpoint: 480,
+									settings: {
+										slidesToShow: 1,
+										slidesToScroll: 1
+									}
+								}
+							]
+						});
+					});
+				</script>
+
 			</div>
-		</div>
+
+
 
 	</section><!--/.reviews-->
 	<!--reviews end -->

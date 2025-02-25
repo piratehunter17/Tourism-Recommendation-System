@@ -3,7 +3,7 @@ import sqlite3
 import random
 
 # Path to the destination dataset (Excel file)
-dataset_path = r"C:\Users\NITISH\Desktop\canadian_tourist_destinations.xlsx"
+dataset_path = r"data\canadian_tourist_destinations.xlsx"
 
 # SQLite database connection function
 def get_db_connection():

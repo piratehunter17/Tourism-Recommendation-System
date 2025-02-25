@@ -29,7 +29,7 @@ else:
     exit()
 
 # Load hotel data
-hotel_data_path = r"C:\Users\NITISH\Desktop\cleaned_hotel_info.csv"
+hotel_data_path = r"data\cleaned_hotel_info.csv"
 hotels = pd.read_csv(hotel_data_path)
 
 # Step 1: Remove rows with 'nil' or missing latitude or longitude

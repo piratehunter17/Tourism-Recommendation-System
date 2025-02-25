@@ -33,6 +33,15 @@ def create_tables():
                             search_term TEXT NOT NULL,
                             FOREIGN KEY (user_id) REFERENCES user (id)
                         )''')
+        conn.execute('''CREATE TABLE IF NOT EXISTS reviews (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            user_id INTEGER,
+                            username TEXT,
+                            rating INTEGER NOT NULL,
+                            review_text TEXT,
+                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                            FOREIGN KEY (user_id) REFERENCES user (id)
+                        )''')
         conn.commit()
         conn.close()
 
@@ -55,7 +64,13 @@ def index():
         if image_url:
             destination['image_url'] = image_url[0]
 
-    return render_template('index.html', username=session.get('username'), recommended_destinations=recommendations)
+    # Fetch reviews from the database
+    conn = get_db_connection()
+    reviews = conn.execute('SELECT * FROM reviews').fetchall()
+    conn.close()
+
+    return render_template('index.html', username=session.get('username'),
+                           recommended_destinations=recommendations, reviews=reviews)
 
 # Function to fetch image URLs from Google Images
 def fetch_image_urls(query, num_images=1):
@@ -171,6 +186,25 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()  # Clears session data
+    return redirect(url_for('index'))
+
+# Route to handle review submission
+@app.route('/submit_review', methods=['POST'])
+def submit_review():
+    rating = request.form['rating']
+    review_text = request.form['review_text']
+    user_id = session.get('user_id', None)  # Get from session if logged in
+    username = session.get('username', 'Anonymous')  # Get username from session, default to 'Anonymous'
+
+    if user_id:  # Only allow review submission if logged in
+        conn = get_db_connection()
+        conn.execute('INSERT INTO reviews (user_id, username, rating, review_text) VALUES (?, ?, ?, ?)',
+                     (user_id, username, rating, review_text))
+        conn.commit()
+        conn.close()
+    else:
+        flash('You need to log in to submit a review.', 'danger')
+
     return redirect(url_for('index'))
 
 if __name__ == '__main__':

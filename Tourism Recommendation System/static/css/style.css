@@ -607,7 +607,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
         8. Reviews
 --------------------------------------*/
 .reviews{padding:117px 0 75px;}
-.reviews-content {margin-top:36px;}
+.reviews-content {margin-top:36px; margin-bottom: 64px;}
 
 /*single-testimonial-box */
 .single-testimonial-box  {
@@ -693,6 +693,111 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
 }
 .slick-current {
   opacity: 1;
+}
+
+.submit-review-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 18px;
+    color: #fff;
+    width: 270px;
+    height: 50px;
+    background: #ff545a;
+    text-transform: capitalize;
+    border-radius: 3px;
+    -webkit-transition: 0.3s linear;
+    -moz-transition: 0.3s linear;
+    -ms-transition: 0.3s linear;
+    -o-transition: 0.3s linear;
+    transition: 0.3s linear;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* This moves it back by 50% of its width */
+}
+
+.submit-review-button:hover{/*background: #fd4043;*/background: #f43032;}
+
+.submit-review-button svg {
+    width:  14px;
+    height:  auto;
+    margin-left:  12px;
+}
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 40%;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.rating-container label {
+    font-size: 40px;
+    cursor: pointer;
+    color: #ccc; /* Default star color */
+}
+
+.rating-container label.hovered,
+.rating-container label.selected {
+    color: gold; /* Hover and selected stars color */
+}
+
+.textarea-container {
+    text-align: center;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    resize: none;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-modal {
+    display: block;
+    background-color: #ff545a;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
 }
 /*.slick-slide*/
 
