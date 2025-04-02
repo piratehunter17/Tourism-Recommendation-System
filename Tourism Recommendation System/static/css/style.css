@@ -250,6 +250,17 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
     height:800px;
     z-index: 1;
 }
+
+.welcome-hero-search-box {
+    position: relative;
+    background:url(../images/welcome-hero/banner.jpg)no-repeat;
+    background-position:center;
+    background-size:cover;
+    text-align: center;
+    height:400px;
+    z-index: 1;
+}
+
 .welcome-hero:before{
     position: absolute;
     content: " ";
@@ -347,6 +358,17 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
     width:  14px;
     height:  auto;
     margin-left:  12px;
+}
+
+.zoom-image {
+	transition: transform 0.3s ease-in-out;
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+.single-explore-img:hover .zoom-image {
+	transform: scale(1.1);
 }
 
 /*-------------------------------------
@@ -450,7 +472,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #ff545a;}
 --------------------------------------*/
 .explore{
     padding:117px 0 95px;
-    background: #f8fafb;
+    background: #f4f4f4;
 }
 .explore-content{margin-top: 78px;}
 

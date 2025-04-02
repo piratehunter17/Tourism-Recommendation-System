@@ -54,6 +54,87 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+<style>
+/* User Menu */
+.user-menu {
+    position: relative;
+    display: inline-block;
+    padding: 34px 21px;
+}
+
+/* User Icon */
+.user-icon {
+    font-size: 22px; /* Adjust icon size */
+    color: #ff545a; /* Match theme color */
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+.user-icon:hover {
+    color: #d83a3f; /* Slightly darker hover effect */
+}
+
+/* Dropdown */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: #fff;
+    min-width: 160px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border: 1px solid #555555;
+}
+
+.dropdown-content li {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 12px 15px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: #859098;
+    transition: all 0.3s ease-in-out;
+}
+
+.dropdown-content a:hover {
+    background: #ff545a;
+    color: white;
+}
+
+/* Show dropdown on hover */
+.user-menu:hover .dropdown-content {
+    display: block;
+}
+
+/* Hide extra content by default */
+.explore-person p {
+    overflow: hidden;
+    display: -webkit-box;
+	-webkit-line-clamp: 2; /* Show only 3 lines */
+	line-clamp: 2; /* Standard property for compatibility */
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    max-height: 4.5em; /* Adjust height based on font size */
+}
+
+/* Hide full text initially */
+.explore-person .full-description {
+    display: none;
+}
+
+/* Read More / Read Less styling */
+.read-more, .read-less {
+    color: #ff545a;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+</style>
 </head>
 
 
@@ -92,13 +173,19 @@
 							<li class="scroll"><a href="#explore">explore</a></li>
 							<li class="scroll"><a href="#reviews">review</a></li>
 							<li class="scroll"><a href="#contact">contact</a></li>
-							{% if username %}
-							<li><a href="{{ url_for('logout') }}">Logout</a></li>
-							{% else %}
-							<li><a href="{{ url_for('login') }}">Login</a></li>
-							<li><a href="{{ url_for('register') }}">Register</a></li>
-							{% endif %}
-							<li><a href="{{ url_for('profile') }}">Profile</a></li>
+							<li class="user-menu">
+								<i class="fa fa-user-circle fa-2x"></i>
+								<ul class="dropdown-content">
+									{% if username %}
+										<li><a href="{{ url_for('profile') }}">Profile</a></li>
+										<li><a href="{{ url_for('logout') }}">Logout</a></li>
+									{% else %}
+										<li><a href="{{ url_for('login') }}">Login</a></li>
+										<li><a href="{{ url_for('register') }}">Register</a></li>
+									{% endif %}
+								</ul>
+							</li>
+							
 						</ul><!--/.nav -->
 					</div><!-- /.navbar-collapse -->
 				</div><!--/.container-->
@@ -214,10 +301,10 @@
 							<div class="single-how-works-icon">
 								<i class="flaticon-lightbulb-idea"></i>
 							</div>
-							<h2><a href="#">choose <span> what to</span> do</a></h2>
+							<h2><a href="#">plan <span> your adventure</span></a></h2>
 							<p>
-								Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt
-								ut laboremagna aliqua.
+								Discover and plan exciting activities that match your interests. 
+								Customize your itinerary with ease and start exploring.
 							</p>
 							<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
 								read more
@@ -229,10 +316,10 @@
 							<div class="single-how-works-icon">
 								<i class="flaticon-networking"></i>
 							</div>
-							<h2><a href="#">find <span> what you want</span></a></h2>
+							<h2><a href="#">find <span> top destinations</span></a></h2>
 							<p>
-								Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt
-								ut laboremagna aliqua.
+								Browse through the best-rated places, read reviews, and 
+								explore destinations tailored to your preferences.
 							</p>
 							<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
 								read more
@@ -244,10 +331,10 @@
 							<div class="single-how-works-icon">
 								<i class="flaticon-location-on-road"></i>
 							</div>
-							<h2><a href="#">explore <span> amazing</span> place</a></h2>
+							<h2><a href="#">explore <span> with ease</span></a></h2>
 							<p>
-								Lorem ipsum dolor sit amet, consecte adipisicing elit, sed do eiusmod tempor incididunt
-								ut laboremagna aliqua.
+								Use interactive maps and real-time guides to navigate 
+								effortlessly and make the most of your trip.
 							</p>
 							<button class="welcome-hero-btn how-work-btn" onclick="window.location.href='#'">
 								read more
@@ -255,55 +342,89 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div><!--/.works-content-->			
 		</div><!--/.container-->
 
 	</section><!--/.works-->
 	<!--works end -->
 
 	<!-- explore start -->
-	<!-- Display Recommended Destinations -->
-	{% if recommended_destinations %}
-	<section id="explore" class="explore">
-		<div class="container">
-			<div class="section-header">
-				<h2>Explore</h2>
-			</div><!--/.section-header-->
-			<div class="explore-content">
-				<div class="row">
-					{% for destination in recommended_destinations %}
-					<div class="col-md-4 col-sm-6">
-						<div class="single-explore-item">
-							<div class="single-explore-img">
-								<img src="{{ destination.image_url }}" alt="Destination Image">
-								<div class="single-explore-img-info">
-									<button onclick="window.location.href='#'">{{ destination.category }}</button>
-								</div>
-							</div>
-							<div class="single-explore-txt bg-theme-{{ loop.index }}">
-								<h2><a href="#">{{ destination.dest_name }}</a></h2>
-								<p class="explore-rating-price">
-									<span class="explore-amenities">{{ destination.amenities }}</span>
-								</p>
-								<div class="explore-person">
-									<div class="row">
-										<div class="col-sm-12">
-											<p>{{ destination.description }}</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					{% endfor %}
-				</div>
-			</div>
-		</div><!--/.container-->
-	</section><!--/.explore-->
-	{% endif %}
+{% if recommended_destinations %}
+<section id="explore" class="explore">
+    <div class="container">
+        <div class="section-header">
+            <h2>Explore</h2>
+        </div><!--/.section-header-->
+        <div class="explore-content">
+            <div class="row">
+                {% for destination in recommended_destinations %}
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="single-explore-item">
+                        <div class="single-explore-img">
+                            <img src="{{ destination.image_url }}" alt="Destination Image" class="zoom-image">
+                            <div class="single-explore-img-info">
+                                <button onclick="window.location.href='#'">{{ destination.category }}</button>
+                            </div>
+                        </div>
+                        <div class="single-explore-txt bg-theme-{{ loop.index }}">
+                            <h2><a href="#">{{ destination.dest_name }}</a></h2>
+                            <p class="explore-rating-price">
+                                <span class="explore-amenities">{{ destination.amenities }}</span>
+                            </p>
+                            <div class="explore-person">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <p class="description">
+                                            {{ destination.description }}
+                                        </p>
+                                        <a class="read-more" onclick="toggleReadMore(this)">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div><!--/.container-->
+    <button class="submit-review-button" type="button">
+        <a href="{{ url_for('map_page') }}" style="color:white;">View on Map</a>
+    </button>      
+</section><!--/.explore-->
+{% endif %}
+<!-- explore end -->
 
-	<!-- explore end -->
+<!-- Read More Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".description").forEach(function (desc) {
+            let fullText = desc.innerHTML.trim();
 
+            if (fullText.length > 150) { // Limit to 150 characters
+                let shortText = fullText.substring(0, 150) + "...";
+                desc.innerHTML = `<span class="short-description">${shortText}</span>
+                                  <span class="full-description" style="display:none;">${fullText}</span>`;
+            }
+        });
+    });
+
+    function toggleReadMore(element) {
+        let container = element.previousElementSibling;
+        let shortDesc = container.querySelector(".short-description");
+        let fullDesc = container.querySelector(".full-description");
+
+        if (fullDesc.style.display === "none") {
+            fullDesc.style.display = "inline";
+            shortDesc.style.display = "none";
+            element.innerHTML = "Read Less";
+        } else {
+            fullDesc.style.display = "none";
+            shortDesc.style.display = "inline";
+            element.innerHTML = "Read More";
+        }
+    }
+</script>
 
 
 	<!--reviews start -->
@@ -538,7 +659,7 @@
 					<div class="subscription-input-group">
 						<form action="/send_email" method="POST">
 							<input type="email" name="email" class="subscription-input-form" placeholder="Enter your email here" required>
-							<button type="submit" class="appsLand-btn subscribe-btn">Create Account</button>
+							<button type="submit" class="appsLand-btn subscribe-btn">Subscribe</button>
 						</form>
 					</div>
 				</div>
@@ -546,9 +667,7 @@
 		</div>
 
 	</section><!--/subscription-->
-	<!--subscription end -->
-
-	<!--footer start-->
+	
 	<footer id="footer" class="footer">
 		<div class="container">
 			<div class="footer-menu">
@@ -564,7 +683,6 @@
 							<li class="scroll"><a href="#explore">explore</a></li>
 							<li class="scroll"><a href="#reviews">review</a></li>
 							<li class="scroll"><a href="#contact">contact</a></li>
-							<li class=" scroll"><a href="#contact">my account</a></li>
 						</ul><!--/.nav -->
 					</div>
 				</div>
@@ -600,9 +718,6 @@
 	</footer><!--/.footer-->
 	<!--footer end-->
 
-	<!-- Include all js compiled plugins (below), or include individual files as needed -->
-
-	<!-- jQuery -->
 	<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 
 	<!-- modernizr.min.js (external link, keep as-is) -->

@@ -52,8 +52,8 @@ hotels['distance'] = hotels.apply(lambda row: calculate_distance(lat, lon, row['
 # Step 6: Sort the DataFrame by the 'distance' column
 hotels_sorted = hotels.sort_values(by='distance')
 
-# Step 7: Return the top 3 nearest hotels as a JSON response
-top_3_hotels = hotels_sorted[['hotel_name', 'latitude', 'longitude', 'distance', 'hotel_rating', 'price']].head(3)
+# Step 7: Return the top 6 nearest hotels as a JSON response
+top_3_hotels = hotels_sorted[['hotel_name', 'latitude', 'longitude', 'distance', 'hotel_rating', 'price']].head(6)
 top_3_hotels_json = top_3_hotels.to_dict(orient='records')
 
 # Returning the JSON response

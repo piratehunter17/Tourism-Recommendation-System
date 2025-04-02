@@ -2,6 +2,8 @@
 <html class="no-js" lang="en">
 
 <head>
+    <!-- title of site -->
+    <title>Crimson Adventures</title>
     <!-- meta data -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,18 +43,11 @@
     <!--responsive.css-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
     <!-- Search Section -->
-    <section id="home" style="background: #f8fafb;">
+    <section id="home" class="welcome-hero-search-box">
         <div class="container">
             <div class="welcome-hero-serch-box">
                 <div class="welcome-hero-form">
@@ -69,11 +64,59 @@
                 </div>
                 <div class="welcome-hero-serch">
                     <button class="welcome-hero-btn" type="submit">
-                        search <i data-feather="search"></i>
+                        <a href="#hotels"></a>search <i data-feather="search"></i>
                     </button>
                 </div>
             </div>
         </div>
+
+
+        <!-- Filter Section -->
+        <form action="{{ url_for('apply_filter') }}" method="get" style="max-width: 800px; margin: 20px auto;">
+            <!-- Ensure that the original search term is passed along with the filter options -->
+            <input type="hidden" name="query" value="{{ query }}">
+
+            <div style="display: flex; justify-content: space-between; gap: 15px; align-items: center;">
+                <!-- Star rating filter -->
+                <div style="flex: 1;">
+                    <label for="star_rating"
+                        style="display: block; font-size: 16px; font-weight: 600; margin-bottom: 8px;">Star
+                        Rating:</label>
+                    <select name="star_rating" id="star_rating"
+                        style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">All ratings</option>
+                        <option value="5">5 stars</option>
+                        <option value="4">4 stars</option>
+                        <option value="3">3 stars</option>
+                        <option value="2">2 stars</option>
+                        <option value="1">1 star</option>
+                    </select>
+                </div>
+
+                <!-- Price range filter -->
+                <div style="flex: 1;">
+                    <label for="price_range"
+                        style="display: block; font-size: 16px; font-weight: 600; margin-bottom: 8px;">Price
+                        Range:</label>
+                    <select name="price_range" id="price_range"
+                        style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 5px;">
+                        <option value="">All prices</option>
+                        <option value="0-50">$0-$50</option>
+                        <option value="50-100">$50-$100</option>
+                        <option value="100-200">$100-$200</option>
+                        <option value="200+">$200+</option>
+                    </select>
+                </div>
+
+                <!-- Apply filter button -->
+                <div style="flex-shrink: 0;">
+                    <button type="submit"
+                        style="background-color: #ff5a5f; color: #fff; padding: 12px 25px; border-radius: 50px; font-size: 16px; font-weight: 600; cursor: pointer; border: none; transition: background-color 0.3s ease; white-space: nowrap;">
+                        <a href="#hotels"></a>Apply Filter
+                    </button>
+                </div>
+            </div>
+        </form>
     </section>
 
     <!-- Display Hotels -->
@@ -82,14 +125,14 @@
         <div class="container">
             <div class="section-header">
                 <h2>Hotels</h2>
-            </div><!--/.section-header-->
+            </div>
             <div class="explore-content">
                 <div class="row">
                     {% for hotel in hotels %}
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="single-explore-item">
                             <div class="single-explore-img">
-                                <img src="{{ hotel.image_url }}" alt="Hotel Image">
+                                <img src="{{ hotel.image_url }}" alt="Hotel Image" class="zoom-image">
                                 <div class="single-explore-img-info">
                                     <button onclick="window.location.href='#'">{{ hotel.rating }} stars</button>
                                 </div>
@@ -112,11 +155,81 @@
                     {% endfor %}
                 </div>
             </div>
-        </div><!--/.container-->
-    </section><!--/.explore-->
+        </div>
+    </section>
     {% endif %}
 
+    <footer id="footer" class="footer">
+		<div class="container">
+			<div class="footer-menu">
+				<div class="row">
+					<div class="col-sm-3">
+						<div class="navbar-header">
+							<a class="navbar-brand" href="index.html">Crimson<span>Adventures</span></a>
+						</div><!--/.navbar-header-->
+					</div>
+					<div class="col-sm-9">
+						<ul class="footer-menu-item">
+						</ul><!--/.nav -->
+					</div>
+				</div>
+			</div>
+			<div class="hm-footer-copyright">
+				<div class="row">
+					<div class="col-sm-5">
+						<p> &copy;Copyrights Reserved </p><!--/p-->
+						<p>Designed and developed by <a href="">RizzGodHarish & Co</a></p>
+					</div>
+					<div class="col-sm-7">
+						<div class="footer-social">
+							<span><i class="fa fa-phone"> +91 1234567890</i></span>
+							<a href="#"><i class="fa fa-facebook"></i></a>
+							<a href="#"><i class="fa fa-twitter"></i></a>
+							<a href="#"><i class="fa fa-linkedin"></i></a>
+							<a href="#"><i class="fa fa-google-plus"></i></a>
+						</div>
+					</div>
+				</div>
 
+			</div><!--/.hm-footer-copyright-->
+		</div><!--/.container-->
+
+		<div id="scroll-Top">
+			<div class="return-to-top">
+				<i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title=""
+					data-original-title="Back to Top" aria-hidden="true"></i>
+			</div>
+
+		</div><!--/.scroll-Top-->
+
+	</footer><!--/.footer-->
+	<!--footer end-->
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+	<!-- modernizr.min.js (external link, keep as-is) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+	<!-- bootstrap.min.js -->
+	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+	<!-- bootsnav js -->
+	<script src="{{ url_for('static', filename='js/bootsnav.js') }}"></script>
+
+	<!-- feather.min.js -->
+	<script src="{{ url_for('static', filename='js/feather.min.js') }}"></script>
+
+	<!-- counter js -->
+	<script src="{{ url_for('static', filename='js/jquery.counterup.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/waypoints.min.js') }}"></script>
+
+	<!-- slick.min.js -->
+	<script src="{{ url_for('static', filename='js/slick.min.js') }}"></script>
+
+	<!-- jQuery easing (external link, keep as-is) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+	<!-- Custom JS -->
+	<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 </body>
 
 </html>

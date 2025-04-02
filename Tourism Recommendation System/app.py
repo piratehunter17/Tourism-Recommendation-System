@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 import sqlite3
 import os
 import requests
@@ -10,6 +10,8 @@ from recommendation import recommend_destinations  # Import the recommendation f
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+from flask_mail import Mail, Message
 
 # SQLite database connection function
 def get_db_connection():
@@ -57,6 +59,9 @@ def index():
         recommendations = recommend_destinations(user_id)
     else:
         recommendations = recommend_destinations()
+
+    # Store recommendations in session so it remains the same for the map
+    session['recommendations'] = recommendations  
 
     # Fetch images for each recommendation
     for destination in recommendations:
@@ -137,6 +142,62 @@ def search():
         return render_template('search.html', query=query, hotels=hotel_details)
     else:
         return render_template('search.html')
+
+@app.route('/apply_filter', methods=['GET'])
+def apply_filter():
+    # Get filter criteria from the request
+    star_rating = request.args.get('star_rating')
+    price_range = request.args.get('price_range')
+
+    print(f"Star Rating: {star_rating}, Price Range: {price_range}")  # Debug: Check if filters are received
+
+    # Get the hotel query (in case there's a hotel search query to apply filters on)
+    query = request.args.get('query', 'sample_query')  # Use 'sample_query' as fallback if no query is provided
+
+    # Fetch hotel details using geocode.py (via subprocess)
+    hotel_details = get_hotel_details(query)
+    print(f"Original Hotel Details: {hotel_details}")  # Debug: Check hotel details fetched from geocode.py
+
+    # Filter hotels based on star rating
+    if star_rating:
+        try:
+            star_rating = int(star_rating)
+            hotel_details = [hotel for hotel in hotel_details if hotel.get('rating') == star_rating]
+            print(f"Hotels after Star Rating Filter: {hotel_details}")  # Debug: Check hotels after star rating filter
+        except ValueError:
+            print("Invalid star rating received.")
+
+    # Filter hotels based on price range
+    if price_range:
+        try:
+            # Define min and max price for the selected price range
+            if price_range == '0-50':
+                min_price, max_price = 0, 50
+            elif price_range == '50-100':
+                min_price, max_price = 50, 100
+            elif price_range == '100-200':
+                min_price, max_price = 100, 200
+            elif price_range == '200+':
+                min_price, max_price = 200, float('inf')
+            else:
+                min_price, max_price = 0, float('inf')
+
+            # Filter hotels within the selected price range
+            hotel_details = [hotel for hotel in hotel_details if isinstance(hotel.get('price'), (int, float)) and min_price <= hotel['price'] <= max_price]
+            print(f"Hotels after Price Filter: {hotel_details}")  # Debug: Check hotels after price filter
+        except Exception as e:
+            print(f"Error filtering by price: {e}")
+
+    # Fetch images for each hotel name after filtering
+    for hotel in hotel_details:
+        image_url = fetch_image_urls(hotel['name'])
+        if image_url:
+            hotel['image_url'] = image_url[0]  # Get the first image URL for each hotel
+
+    # Return the filtered hotels to the search.html template
+    return render_template('search.html', query=query, hotels=hotel_details)
+
+
 
 # Registration Route
 @app.route('/register', methods=['GET', 'POST'])
@@ -324,7 +385,32 @@ def delete_review(review_id):
     conn.close()
 
     flash('Review deleted successfully!', 'success')
-    return redirect(url_for('admin_dashboard'))
+    return redirect(url_for('admin_dashboard')) 
+
+# Route to map page
+@app.route('/map')
+def map_page():
+    return render_template('map.html')
+
+
+# Route to send the same recommendations to the map
+@app.route('/recommend-map')
+def recommend_map():
+    if 'recommendations' in session:
+        recommendations = session['recommendations']
+    else:
+        if 'loggedin' in session:
+            user_id = session['user_id']
+            recommendations = recommend_destinations(user_id)
+        else:
+            recommendations = recommend_destinations()
+
+        session['recommendations'] = recommendations  # Store recommendations
+
+    # Prepare JSON response
+    locations = [{'name': dest['dest_name'], 'description': dest['description']} for dest in recommendations]
+    return jsonify(locations)
+
 
 
 

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crimson Adventures</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* General styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Full-screen map */
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Search bar styling */
+        .welcome-hero {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .welcome-hero-serch-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .welcome-hero-form {
+            display: flex;
+            background: #fff;
+            height: 50px;
+            border-radius: 5px;
+            width: 70%;
+            align-items: center;
+            padding: 0 15px;
+        }
+
+        .single-welcome-hero-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .single-welcome-hero-form input {
+            flex: 1;
+            height: 45px;
+            border: none;
+            font-size: 16px;
+            padding: 0 10px;
+        }
+
+        .welcome-hero-btn {
+            background: #ff545a;
+            color: white;
+            font-size: 16px;
+            border: none;
+            height: 50px;
+            padding: 0 20px;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .welcome-hero-btn:hover {
+            background: #f43032;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Search Bar Section -->
+<div class="welcome-hero">
+    <div class="welcome-hero-serch-box">
+        <div class="welcome-hero-form">
+            <div class="single-welcome-hero-form">
+                <input type="text" id="search-bar" placeholder="Enter ; seperated keywords (Ex: New York; London)" required>
+            </div>
+        </div>
+        <button class="welcome-hero-btn" id="search-button">Search</button>
+    </div>
+</div>
+
+<!-- Map -->
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+    // Initialize the map
+    const map = L.map('map').setView([51.505, -0.09], 3); // Default view (London)
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    let markers = L.layerGroup().addTo(map); // Layer to hold markers
+
+    // Function to fetch and display locations on the map
+    async function searchLocations(locationString) {
+        let locations = locationString.split(';').map(loc => loc.trim());
+        if (locations.length === 0) {
+            alert('Please enter at least one location.');
+            return;
+        }
+
+        markers.clearLayers(); // Clear existing markers
+        let bounds = L.latLngBounds();
+
+        // Fetch locations in parallel
+        let fetchPromises = locations.map(location =>
+            fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(location)}&format=json&limit=1`)
+                .then(response => response.json())
+                .then(data => (data.length > 0 ? { 
+                    lat: parseFloat(data[0].lat), 
+                    lon: parseFloat(data[0].lon), 
+                    name: location
+                } : null))
+        );
+
+        let results = await Promise.all(fetchPromises);
+        let validResults = results.filter(res => res !== null);
+
+        if (validResults.length === 0) {
+            alert('No valid locations found.');
+            return;
+        }
+
+        validResults.forEach(result => {
+            let marker = L.marker([result.lat, result.lon])
+                .bindPopup(`<b>${result.name}</b>`)
+                .addTo(markers);
+            bounds.extend([result.lat, result.lon]);
+        });
+
+        if (validResults.length === 1) {
+            map.setView([validResults[0].lat, validResults[0].lon], 13);
+        } else {
+            map.fitBounds(bounds, { padding: [50, 50] });
+        }
+    }
+
+    // Event listener for the search button
+    document.getElementById('search-button').addEventListener('click', () => {
+        const locationString = document.getElementById('search-bar').value;
+        if (locationString) {
+            searchLocations(locationString);
+        } else {
+            alert('Please enter a location.');
+        }
+    });
+
+    // Event listener for Enter key in search bar
+    document.getElementById('search-bar').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            document.getElementById('search-button').click();
+        }
+    });
+
+    // Fetch recommended destinations from Flask and display them
+    async function loadRecommendations() {
+        try {
+            let response = await fetch('/recommend-map');
+            let locations = await response.json();
+            
+            if (locations.length === 0) {
+                alert('No recommendations available.');
+                return;
+            }
+
+            markers.clearLayers(); // Clear old markers
+            let bounds = L.latLngBounds();
+
+            let fetchPromises = locations.map(loc =>
+                fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(loc.name)}&format=json&limit=1`)
+                    .then(response => response.json())
+                    .then(data => (data.length > 0 ? { 
+                        lat: parseFloat(data[0].lat), 
+                        lon: parseFloat(data[0].lon), 
+                        name: loc.name, 
+                        description: loc.description 
+                    } : null))
+            );
+
+            let results = await Promise.all(fetchPromises);
+            let validResults = results.filter(res => res !== null);
+
+            validResults.forEach(result => {
+                let marker = L.marker([result.lat, result.lon])
+                    .bindPopup(`<b>${result.name}</b><br>${result.description}`)
+                    .addTo(markers);
+                bounds.extend([result.lat, result.lon]);
+            });
+
+            if (validResults.length === 1) {
+                map.setView([validResults[0].lat, validResults[0].lon], 13);
+            } else {
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+
+        } catch (error) {
+            console.error('Error fetching recommendations:', error);
+            alert('Error loading recommended locations.');
+        }
+    }
+
+    // Load recommendations when the page loads
+    document.addEventListener('DOMContentLoaded', loadRecommendations);
+</script>
+
+</body>
+</html>
